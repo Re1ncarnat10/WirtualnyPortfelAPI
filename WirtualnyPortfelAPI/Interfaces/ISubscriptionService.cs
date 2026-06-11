@@ -6,6 +6,7 @@ namespace WirtualnyPortfelAPI.Interfaces
     public interface ISubscriptionService
     {
         Task<IEnumerable<Subscription>> GetForUser(Guid userId);
+        Task<IEnumerable<UpcomingPaymentDto>> GetUpcomingForUser(Guid userId);
         Task<Subscription?> GetById(Guid id);
         Task<SubscriptionDetailDto?> GetDetail(Guid id);
         Task<MonthlyStats> GetMonthlyStats(Guid userId, int monthsBack);

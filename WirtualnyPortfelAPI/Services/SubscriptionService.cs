@@ -9,6 +9,28 @@ namespace WirtualnyPortfelAPI.Services
         private readonly List<Subscription> _subs = new();
         private readonly List<Category> _categories = new();
 
+        // helpers for prototyping/demo
+        public void SeedCategory(Category c)
+        {
+            _categories.Add(c);
+        }
+
+        public Task<IEnumerable<UpcomingPaymentDto>> GetUpcomingForUser(Guid userId)
+        {
+            var payments = _subs.Where(s => s.UserId == userId && s.IsActive)
+                .OrderBy(s => s.RenewalDate)
+                .Select(s => new UpcomingPaymentDto
+                {
+                    Id = s.Id,
+                    Title = s.Title,
+                    Price = s.Price,
+                    Currency = s.Currency,
+                    RenewalDate = s.RenewalDate,
+                    CategoryName = _categories.FirstOrDefault(c => c.Id == s.CategoryId)?.Name
+                }).AsEnumerable();
+            return Task.FromResult(payments);
+        }
+
         public Task<Subscription> Create(Subscription subscription)
         {
             _subs.Add(subscription);
