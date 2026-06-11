@@ -1,0 +1,6 @@
+@WirtualnyPortfelAPI_HostAddress = http://localhost:5272
+
+GET {{WirtualnyPortfelAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
