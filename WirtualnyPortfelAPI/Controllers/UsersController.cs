@@ -31,6 +31,16 @@ namespace WirtualnyPortfelAPI.Controllers
             return Ok(user);
         }
 
+        [HttpPost("google-login")]
+        public async Task<ActionResult<UserDto>> GoogleLogin([FromQuery] string email)
+        {
+            // return existing user by email or create a lightweight record for Google users
+            var user = await _userService.GetByEmail(email);
+            if (user != null) return Ok(user);
+            var created = await _userService.Create(new Models.User { Email = email, DisplayName = "Google User" }, "");
+            return Ok(created);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetById(Guid id)
         {
