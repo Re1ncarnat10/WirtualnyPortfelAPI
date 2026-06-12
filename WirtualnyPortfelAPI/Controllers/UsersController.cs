@@ -19,6 +19,18 @@ namespace WirtualnyPortfelAPI.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register([FromBody] User user, [FromQuery] string password)
         {
+            // Basic server-side validation with specific error codes/messages
+            if (string.IsNullOrWhiteSpace(password) || password.Length < 8)
+            {
+                return BadRequest("PASSWORD_TOO_WEAK: Has³o musi mieæ co najmniej 8 znaków.");
+            }
+
+            var existing = await _userService.GetByEmail(user.Email);
+            if (existing != null)
+            {
+                return Conflict("EMAIL_TAKEN: Podany adres e-mail jest ju¿ zarejestrowany.");
+            }
+
             var created = await _userService.Create(user, password);
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
